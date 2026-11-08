@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Shift Sheet · Check timecards before they travel</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="brand">SHIFT SHEET <span>Timecard review</span></div>
+    <h1>A missing punch<br>should be easy to find.</h1>
+    <p>Review a team’s same-day clock times, resolve the held rows, and download checked hours.</p>
+  </header>
+  <main>
+    <section class="card">
+      <div class="section-title"><h2>1. Add the CSV export</h2><button id="example">Load example</button></div>
+      <p>One employee and date per row, with one or two work segments. Keep the original file for reference.</p>
+      <label for="csv-file">Choose a UTF-8 CSV file</label>
+      <input type="file" id="csv-file" accept=".csv,text/csv">
+      <label for="source">Or paste the CSV, including its header</label>
+      <textarea id="source" rows="6" spellcheck="false" placeholder="Employee,Date,In,Out,In2,Out2"></textarea>
+      <button class="primary" id="read">Read columns</button>
+      <p id="message" role="status" aria-live="polite">Load the example to see a missing punch and a repeated day.</p>
+    </section>
+    <section class="card" id="mapping-panel" hidden>
+      <h2>2. Match the columns</h2>
+      <div class="mapping" id="mapping"></div>
+      <label for="date-format">Date format in your export</label>
+      <select id="date-format">
+        <option value="ymd">Year-month-day · 2026-11-02</option>
+        <option value="mdy">Month/day/year · 11/02/2026</option>
+        <option value="dmy">Day/month/year · 02/11/2026</option>
+      </select>
+      <p>Times can use 24-hour H:MM or 12-hour AM/PM. An unused second segment can be blank or zero in both fields. This review covers same-day segments. Overnight shifts and clock-change days need separate review.</p>
+      <button class="primary" id="review">Review timecards</button>
+    </section>
+    <section id="results" hidden>
+      <div class="section-title"><h2>3. Resolve and download</h2><div class="downloads"><button id="download-review">Download review log</button><button class="primary" id="download-checked" disabled>Download checked hours</button></div></div>
+      <div id="summary" class="summary" aria-live="polite"></div>
+      <p class="table-help">Edit a clock time to correct it. Excluding a row requires a reason. The review log records corrections, exclusions and held rows.</p>
+      <div class="table-scroll"><table><thead><tr><th>Source row</th><th>Employee</th><th>Date</th><th>In 1</th><th>Out 1</th><th>In 2</th><th>Out 2</th><th>Hours</th><th>Review</th><th>Exclude</th><th>Note / reason</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p>Ready hours use the displayed clock times at minute precision. Exports include mapped fields and source row numbers. Keep the review log with the checked-hours file.</p>
+    </section>
+  </main>
+  <footer>Files are processed in this browser tab. Downloads are your saved copies. Refreshing clears the session. Up to 5,000 data rows per review.</footer>
+</body>
+</html>
